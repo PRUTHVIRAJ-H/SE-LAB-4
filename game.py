@@ -3,7 +3,18 @@ from board import Board
 
 class Minesweeper:
     def __init__(self):
-        self.board = Board()
+        print("Minesweeper")
+        self.n = int(input("Please enter n (used for n*n grid) :"))
+        print("Please select mode :")
+        print("E : Easy(n*n grid and n mines)")
+        print("M : Medium(n*n grid and (n*n)/3 mines)")
+        print("H : Hard(n*n grid and (n*n)/2 mines)")
+        self.mode = ""
+        while(self.mode not in ("E","M","H")):
+            self.mode = input("Please enter your choice:")
+        
+        self.mode_n = {"E":self.n,"M":(self.n*self.n)//3,"H":(self.n*self.n)//2}
+        self.board = Board(self.n,self.n,self.mode_n[self.mode])
 
     def display(self, reveal_mines=False):
         b = self.board
@@ -27,7 +38,8 @@ class Minesweeper:
 
     def run(self):
         print("Minesweeper")
-        print("Commands: r row col | f row col | q")
+        print('Your Mode:'+self.mode+" Your Grid Size:"+str(self.n*self.n)+" Mines: "+str(self.mode_n[self.mode]))
+        
         while True:
             self.display()
             raw = input("> ").strip().lower()
@@ -42,6 +54,7 @@ class Minesweeper:
             except ValueError:
                 print("Coordinates must be numbers.")
                 continue
+
             if not self.board.in_bounds(r, c):
                 print("Outside the board.")
                 continue
@@ -54,6 +67,7 @@ class Minesweeper:
                 self.display(reveal_mines=True)
                 print("BOOM! You hit a mine.")
                 return
+
             if self.board.won():
                 self.display()
                 print("You cleared the board!")

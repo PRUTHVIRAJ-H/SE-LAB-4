@@ -27,7 +27,7 @@ class Board:
                 if dr == 0 and dc == 0:
                     continue
                 nr, nc = r + dr, c + dc
-                if 0 <= nr <= self.rows and 0 <= nc <= self.cols:
+                if 0 <= nr < self.rows and 0 <= nc < self.cols:
                     yield nr, nc
 
     def adjacent_mines(self, r, c):
@@ -36,7 +36,9 @@ class Board:
     def reveal(self, start):
         stack = [start]
         hit_mine = False
+        count = 0
         while stack:
+            count += 1
             pos = stack.pop()
             if pos in self.revealed or pos in self.flags:
                 continue
@@ -47,6 +49,13 @@ class Board:
                 continue
             if self.adjacent_mines(r, c) == 0:
                 stack.extend(n for n in self.neighbors(r, c) if n not in self.revealed)
+        
+        if count < 6:
+           print("watch out")
+        elif count > 6 and count < 12:
+            print("Hmm good Going")
+        else:
+            print("Great! Well Done")
         return hit_mine
 
     def toggle_flag(self, pos):
